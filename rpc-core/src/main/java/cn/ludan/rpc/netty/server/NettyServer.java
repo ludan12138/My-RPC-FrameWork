@@ -4,6 +4,7 @@ import cn.ludan.rpc.RpcServer;
 import cn.ludan.rpc.codec.CommonDecoder;
 import cn.ludan.rpc.codec.CommonEncoder;
 import cn.ludan.rpc.serializer.JsonSerializer;
+import cn.ludan.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -41,7 +42,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new CommonDecoder());
-                            pipeline.addLast(new CommonEncoder(new JsonSerializer()));
+                            pipeline.addLast(new CommonEncoder(new KryoSerializer()));
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
