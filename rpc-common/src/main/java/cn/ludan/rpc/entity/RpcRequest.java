@@ -1,7 +1,10 @@
 package cn.ludan.rpc.entity;
 
-import lombok.Builder;
+
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -10,8 +13,10 @@ import java.io.Serializable;
  * @author Ludan
  * @date 2021/8/24 10:15
 */
+
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RpcRequest implements Serializable {
 
     /**

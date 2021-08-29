@@ -6,5 +6,10 @@ package cn.ludan.rpc.api;
 */
 public interface HelloService {
 
+    /**
+     * 测试用的调用方法
+     * @param object
+     * @return
+     */
     String hello(HelloObject object);
 }

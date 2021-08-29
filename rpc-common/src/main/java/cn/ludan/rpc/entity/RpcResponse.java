@@ -1,7 +1,9 @@
 package cn.ludan.rpc.entity;
 
 import cn.ludan.rpc.enumeration.ResponseCode;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 /**
@@ -10,6 +12,8 @@ import java.io.Serializable;
  * @date 2021/8/24 10:22
 */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RpcResponse<T> implements Serializable {
 
     private Integer statusCode;
