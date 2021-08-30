@@ -18,6 +18,6 @@ public class SocketTestServer {
         serviceProvider.register(helloService);
         SocketServer rpcServer = new SocketServer(serviceProvider);
         rpcServer.setSerializer(new KryoSerializer());
-        rpcServer.start(9000);
+        rpcServer.start(9999);
     }
 }

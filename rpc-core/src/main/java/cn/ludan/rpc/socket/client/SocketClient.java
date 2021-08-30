@@ -9,6 +9,7 @@ import cn.ludan.rpc.exception.RpcException;
 import cn.ludan.rpc.serializer.CommonSerializer;
 import cn.ludan.rpc.socket.util.ObjectReader;
 import cn.ludan.rpc.socket.util.ObjectWriter;
+import cn.ludan.rpc.util.RpcMessageChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,14 +45,7 @@ public class SocketClient implements RpcClient {
             ObjectWriter.writeObject(outputStream,rpcRequest,serializer);
             Object obj = ObjectReader.readObject(inputStream);
             RpcResponse rpcResponse = (RpcResponse) obj;
-            if(rpcResponse == null){
-                logger.error("服务调用失败，service：{}",rpcRequest.getInterfaceName());
-                throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE," service:"+rpcRequest.getInterfaceName());
-            }
-            if(rpcResponse.getStatusCode() == null || rpcResponse.getStatusCode() != ResponseCode.SUCCESS.getCode()){
-                logger.error("调用服务失败，service：{}，response：{}",rpcRequest.getInterfaceName(),rpcResponse);
-                throw new RpcException(RpcError.SERVICE_INVOCATION_FAILURE," service:"+rpcRequest.getInterfaceName());
-            }
+            RpcMessageChecker.check(rpcRequest,rpcResponse);
             return rpcResponse.getData();
         } catch (IOException e){
             logger.error("调用时有错误发生");

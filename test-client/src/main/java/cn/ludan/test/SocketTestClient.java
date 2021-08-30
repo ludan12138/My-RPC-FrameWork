@@ -15,11 +15,12 @@ import cn.ludan.rpc.socket.client.SocketClient;
 */
 public class SocketTestClient {
     public static void main(String[] args) {
-        RpcClient rpcClient = new SocketClient("127.0.0.1",9000);
+        RpcClient rpcClient = new SocketClient("127.0.0.1",9999);
         rpcClient.setSerializer(new JsonSerializer());
         RpcClientProxy proxy = new RpcClientProxy(rpcClient);
         HelloService helloService = proxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12,"This is a message");
+        HelloObject object1 = new HelloObject(13,"hello ludan");
         String res = helloService.hello(object);
         System.out.println(res);
     }
