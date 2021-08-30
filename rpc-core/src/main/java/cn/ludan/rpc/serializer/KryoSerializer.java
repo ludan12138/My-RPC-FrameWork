@@ -40,7 +40,7 @@ public class KryoSerializer implements CommonSerializer{
     }
 
     @Override
-    public Object deserializer(byte[] bytes, Class<?> clazz) {
+    public Object deserialize(byte[] bytes, Class<?> clazz) {
         try(ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
             Input input = new Input(byteArrayInputStream)){
             Kryo kryo = kryoThreadLocal.get();

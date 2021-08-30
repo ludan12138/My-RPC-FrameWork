@@ -3,6 +3,9 @@ package cn.ludan.rpc.netty.server;
 import cn.ludan.rpc.RpcServer;
 import cn.ludan.rpc.codec.CommonDecoder;
 import cn.ludan.rpc.codec.CommonEncoder;
+import cn.ludan.rpc.enumeration.RpcError;
+import cn.ludan.rpc.exception.RpcException;
+import cn.ludan.rpc.serializer.CommonSerializer;
 import cn.ludan.rpc.serializer.JsonSerializer;
 import cn.ludan.rpc.serializer.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -24,9 +27,14 @@ public class NettyServer implements RpcServer {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
 
+    private CommonSerializer serializer;
 
     @Override
     public void start(int port) {
+        if(serializer == null){
+            logger.error("未设置序列化器");
+            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+        }
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
@@ -42,7 +50,7 @@ public class NettyServer implements RpcServer {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
                             pipeline.addLast(new CommonDecoder());
-                            pipeline.addLast(new CommonEncoder(new KryoSerializer()));
+                            pipeline.addLast(new CommonEncoder(serializer));
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
@@ -54,7 +62,12 @@ public class NettyServer implements RpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
-
-
     }
+
+    @Override
+    public void setSerializer(CommonSerializer serializer) {
+        this.serializer = serializer;
+    }
+
+
 }

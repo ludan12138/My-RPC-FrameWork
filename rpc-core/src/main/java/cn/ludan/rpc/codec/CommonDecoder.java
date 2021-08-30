@@ -48,7 +48,7 @@ public class CommonDecoder extends ReplayingDecoder {
         int length = in.readInt();
         byte[] bytes = new byte[length];
         in.readBytes(bytes);
-        Object obj = serializer.deserializer(bytes,packageClass);
+        Object obj = serializer.deserialize(bytes,packageClass);
         out.add(obj);
     }
 }

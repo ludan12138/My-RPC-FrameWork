@@ -1,17 +1,25 @@
 package cn.ludan.rpc.registry;
 
-public interface ServiceRegistry {
-    /**
-     * 注册服务
-     * @param service
-     * @param <T>
-     */
-    <T> void register (T service);
+import java.net.InetSocketAddress;
+
+
+/**
+ * 服务注册接口
+ * @author Ludan
+ * @date 2021/8/29 20:56
+*/public interface ServiceRegistry {
 
     /**
-     * 根据服务名获取对应的服务实现
+     * 根据服务的名称和地址注册进服务注册中心
+     * @param serviceName
+     * @param inetSocketAddress
+     */
+    void register(String serviceName, InetSocketAddress inetSocketAddress);
+
+    /**
+     * 根据服务名称从注册中心获取到一个服务提供者的地址
      * @param serviceName
      * @return
      */
-    Object getService(String serviceName);
+    InetSocketAddress lookupService(String serviceName);
 }

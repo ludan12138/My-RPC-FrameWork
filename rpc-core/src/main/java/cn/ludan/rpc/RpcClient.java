@@ -1,6 +1,8 @@
 package cn.ludan.rpc;
 
 import cn.ludan.rpc.entity.RpcRequest;
+import cn.ludan.rpc.serializer.CommonSerializer;
+
 /**
  * 客户端类通用接口
  * @author Ludan
@@ -15,4 +17,9 @@ public interface RpcClient {
      */
     Object sendRequest(RpcRequest rpcRequest);
 
+    /**
+     * 设置序列化器
+     * @param serializer
+     */
+    void setSerializer(CommonSerializer serializer);
 }

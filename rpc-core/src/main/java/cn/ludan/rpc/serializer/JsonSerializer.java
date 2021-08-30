@@ -27,7 +27,7 @@ public class JsonSerializer implements CommonSerializer{
     }
 
     @Override
-    public Object deserializer(byte[] bytes, Class<?> clazz) {
+    public Object deserialize(byte[] bytes, Class<?> clazz) {
         try{
             Object obj = objectMapper.readValue(bytes,clazz);
             if(obj instanceof RpcRequest){

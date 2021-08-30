@@ -4,6 +4,8 @@ import cn.ludan.rpc.api.HelloObject;
 import cn.ludan.rpc.api.HelloService;
 import cn.ludan.rpc.RpcClient;
 import cn.ludan.rpc.RpcClientProxy;
+import cn.ludan.rpc.serializer.JsonSerializer;
+import cn.ludan.rpc.serializer.KryoSerializer;
 import cn.ludan.rpc.socket.client.SocketClient;
 
 /**
@@ -14,6 +16,7 @@ import cn.ludan.rpc.socket.client.SocketClient;
 public class SocketTestClient {
     public static void main(String[] args) {
         RpcClient rpcClient = new SocketClient("127.0.0.1",9000);
+        rpcClient.setSerializer(new JsonSerializer());
         RpcClientProxy proxy = new RpcClientProxy(rpcClient);
         HelloService helloService = proxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12,"This is a message");

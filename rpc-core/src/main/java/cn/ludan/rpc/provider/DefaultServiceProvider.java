@@ -1,17 +1,16 @@
-package cn.ludan.rpc.registry;
+package cn.ludan.rpc.provider;
 
 import cn.ludan.rpc.enumeration.RpcError;
 import cn.ludan.rpc.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultServiceRegistry implements ServiceRegistry {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
+public class DefaultServiceProvider implements ServiceProvider {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceProvider.class);
 
     /**
      * key为服务名 value为提供服务的对象
