@@ -6,12 +6,12 @@ public interface ServiceProvider {
      * @param service
      * @param <T>
      */
-    <T> void register (T service);
+    <T> void addServiceProvider (T service, Class<T> serviceClass);
 
     /**
      * 根据服务名获取对应的服务实现
      * @param serviceName
      * @return
      */
-    Object getService(String serviceName);
+    Object getServiceProvider(String serviceName);
 }

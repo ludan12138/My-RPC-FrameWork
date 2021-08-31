@@ -16,10 +16,4 @@ import java.net.InetSocketAddress;
      */
     void register(String serviceName, InetSocketAddress inetSocketAddress);
 
-    /**
-     * 根据服务名称从注册中心获取到一个服务提供者的地址
-     * @param serviceName
-     * @return
-     */
-    InetSocketAddress lookupService(String serviceName);
 }
