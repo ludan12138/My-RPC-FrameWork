@@ -4,9 +4,9 @@ public interface ServiceProvider {
     /**
      * 注册服务
      * @param service
-     * @param <T>
+     * @param serviceName
      */
-    <T> void addServiceProvider (T service, Class<T> serviceClass);
+    <T> void addServiceProvider (T service, String serviceName);
 
     /**
      * 根据服务名获取对应的服务实现

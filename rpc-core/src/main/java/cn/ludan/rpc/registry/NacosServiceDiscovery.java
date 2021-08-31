@@ -1,5 +1,7 @@
 package cn.ludan.rpc.registry;
 
+import cn.ludan.rpc.enumeration.RpcError;
+import cn.ludan.rpc.exception.RpcException;
 import cn.ludan.rpc.loadbalancer.LoadBalancer;
 import cn.ludan.rpc.loadbalancer.RandomLoadBalancer;
 import cn.ludan.rpc.util.NacosUtil;
@@ -30,6 +32,10 @@ public class NacosServiceDiscovery implements ServiceDiscovery{
     public InetSocketAddress lookupService(String serviceName) {
         try{
             List<Instance> instances = NacosUtil.getAllInstance(serviceName);
+            if(instances.size() == 0){
+                logger.error("找不到对应的服务：" + serviceName);
+                throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
+            }
             Instance instance = loadBalancer.select(instances);
             return new InetSocketAddress(instance.getIp(),instance.getPort());
         } catch (NacosException e){

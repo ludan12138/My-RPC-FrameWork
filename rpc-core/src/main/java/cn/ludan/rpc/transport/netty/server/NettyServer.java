@@ -5,6 +5,7 @@ import cn.ludan.rpc.provider.ServiceProvider;
 import cn.ludan.rpc.provider.ServiceProviderImpl;
 import cn.ludan.rpc.registry.NacosServiceRegister;
 import cn.ludan.rpc.registry.ServiceRegistry;
+import cn.ludan.rpc.transport.AbstractRpcServer;
 import cn.ludan.rpc.transport.RpcServer;
 import cn.ludan.rpc.codec.CommonDecoder;
 import cn.ludan.rpc.codec.CommonEncoder;
@@ -28,17 +29,7 @@ import java.net.InetSocketAddress;
  * @author Ludan
  * @date 2021/8/27 20:10
 */
-public class NettyServer implements RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
-
-    private final String host;
-
-    private final int port;
-
-    private final ServiceRegistry serviceRegistry;
-
-    private final ServiceProvider serviceProvider;
+public class NettyServer extends AbstractRpcServer {
 
     private final CommonSerializer serializer;
 
@@ -52,23 +43,7 @@ public class NettyServer implements RpcServer {
         serviceRegistry = new NacosServiceRegister();
         serviceProvider = new ServiceProviderImpl();
         this.serializer = CommonSerializer.getByCode(serializer);
-    }
-
-    /**
-     * 注册服务到本地服务表和Nacos服务注册中心
-     * @param service
-     * @param serviceClass
-     * @param <T>
-     */
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if(serializer == null){
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service,serviceClass);
-        serviceRegistry.register(serviceClass.getCanonicalName(),new InetSocketAddress(host,port));
-        start();
+        scanServices();
     }
 
     @Override

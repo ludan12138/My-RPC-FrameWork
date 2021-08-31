@@ -1,5 +1,6 @@
 package cn.ludan.test;
 
+import cn.ludan.rpc.api.ByeService;
 import cn.ludan.rpc.api.HelloObject;
 import cn.ludan.rpc.api.HelloService;
 import cn.ludan.rpc.serializer.CommonSerializer;
@@ -22,5 +23,7 @@ public class SocketTestClient {
         HelloObject object1 = new HelloObject(13,"hello ludan");
         String res = helloService.hello(object);
         System.out.println(res);
+        ByeService byeService = proxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Socket"));
     }
 }

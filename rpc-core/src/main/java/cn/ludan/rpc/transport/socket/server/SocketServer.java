@@ -8,6 +8,7 @@ import cn.ludan.rpc.provider.ServiceProvider;
 import cn.ludan.rpc.provider.ServiceProviderImpl;
 import cn.ludan.rpc.registry.NacosServiceRegister;
 import cn.ludan.rpc.registry.ServiceRegistry;
+import cn.ludan.rpc.transport.AbstractRpcServer;
 import cn.ludan.rpc.transport.RpcServer;
 import cn.ludan.rpc.serializer.CommonSerializer;
 import cn.ludan.rpc.factory.ThreadPoolFactory;
@@ -20,23 +21,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.*;
 
-public class SocketServer implements RpcServer {
-
-    private static final Logger logger = LoggerFactory.getLogger(SocketServer.class);
+public class SocketServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
 
     private final CommonSerializer serializer;
 
     private final RequestHandler requestHandler = new RequestHandler();
-
-    private final String host;
-
-    private final int port;
-
-    private final ServiceProvider serviceProvider;
-
-    private final ServiceRegistry serviceRegistry;
 
     public SocketServer(String host, int port) {
         this(host,port,DEFAULT_SERIALIZER);
@@ -49,17 +40,7 @@ public class SocketServer implements RpcServer {
         this.serviceRegistry = new NacosServiceRegister();
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
         this.serializer = CommonSerializer.getByCode(serializer);
-    }
-
-    @Override
-    public <T> void publishService(T service, Class<T> serviceClass) {
-        if(serializer == null){
-            logger.error("未设置序列化器");
-            throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
-        }
-        serviceProvider.addServiceProvider(service,serviceClass);
-        serviceRegistry.register(serviceClass.getName(), new InetSocketAddress(host,port));
-        start();
+        scanServices();
     }
 
     @Override

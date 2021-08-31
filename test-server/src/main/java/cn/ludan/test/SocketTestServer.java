@@ -12,8 +12,7 @@ import cn.ludan.rpc.transport.socket.server.SocketServer;
 */
 public class SocketTestServer {
     public static void main(String[] args) {
-        HelloService helloService = new HelloServiceImpl2();
-        SocketServer rpcServer = new SocketServer("127.0.0.1",9999, CommonSerializer.KRYO_SERIALIZER);
-        rpcServer.publishService(helloService,HelloService.class);
+        SocketServer server = new SocketServer("127.0.0.1",9999, CommonSerializer.KRYO_SERIALIZER);
+        server.start();
     }
 }

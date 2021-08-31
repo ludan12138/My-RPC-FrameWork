@@ -1,5 +1,6 @@
 package cn.ludan.test;
 
+import cn.ludan.rpc.api.ByeService;
 import cn.ludan.rpc.serializer.CommonSerializer;
 import cn.ludan.rpc.transport.RpcClient;
 import cn.ludan.rpc.transport.RpcClientProxy;
@@ -14,9 +15,10 @@ public class NettyTestClient {
         RpcClientProxy rpcClientProxy = new RpcClientProxy(client);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         HelloObject object = new HelloObject(12,"This is a message");
-        for(int i = 0; i < 20; i ++) {
-            String res = helloService.hello(object);
-            System.out.println(res);
-        }
+        String res = helloService.hello(object);
+        System.out.println(res);
+
+        ByeService byeService = rpcClientProxy.getProxy(ByeService.class);
+        System.out.println(byeService.bye("Netty"));
     }
 }
