@@ -26,9 +26,9 @@ public class SocketServer implements RpcServer {
 
     private final ExecutorService threadPool;
 
-    private CommonSerializer serializer;
+    private final CommonSerializer serializer;
 
-    private RequestHandler requestHandler = new RequestHandler();
+    private final RequestHandler requestHandler = new RequestHandler();
 
     private final String host;
 
@@ -39,11 +39,16 @@ public class SocketServer implements RpcServer {
     private final ServiceRegistry serviceRegistry;
 
     public SocketServer(String host, int port) {
+        this(host,port,DEFAULT_SERIALIZER);
+    }
+
+    public SocketServer(String host, int port, Integer serializer) {
         this.host = host;
         this.port = port;
         this.serviceProvider = new ServiceProviderImpl();
         this.serviceRegistry = new NacosServiceRegister();
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
+        this.serializer = CommonSerializer.getByCode(serializer);
     }
 
     @Override
@@ -76,10 +81,5 @@ public class SocketServer implements RpcServer {
         } catch (IOException e){
             logger.error("服务器启动时有错误发生: ",e);
         }
-    }
-
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
     }
 }

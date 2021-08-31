@@ -1,6 +1,7 @@
 package cn.ludan.test;
 
 import cn.ludan.rpc.api.HelloService;
+import cn.ludan.rpc.serializer.CommonSerializer;
 import cn.ludan.rpc.serializer.KryoSerializer;
 import cn.ludan.rpc.transport.socket.server.SocketServer;
 
@@ -12,8 +13,7 @@ import cn.ludan.rpc.transport.socket.server.SocketServer;
 public class SocketTestServer {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl2();
-        SocketServer rpcServer = new SocketServer("127.0.0.1",9999);
-        rpcServer.setSerializer(new KryoSerializer());
+        SocketServer rpcServer = new SocketServer("127.0.0.1",9999, CommonSerializer.KRYO_SERIALIZER);
         rpcServer.publishService(helloService,HelloService.class);
     }
 }

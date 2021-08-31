@@ -2,6 +2,9 @@ package cn.ludan.rpc.serializer;
 
 public interface CommonSerializer {
 
+    Integer KRYO_SERIALIZER = 0;
+    Integer JSON_SERIALIZER = 1;
+
     byte[] serialize(Object obj);
 
     Object deserialize(byte[] bytes,Class<?> clazz);

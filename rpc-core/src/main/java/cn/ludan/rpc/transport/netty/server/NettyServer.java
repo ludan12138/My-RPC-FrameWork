@@ -40,13 +40,18 @@ public class NettyServer implements RpcServer {
 
     private final ServiceProvider serviceProvider;
 
-    private CommonSerializer serializer;
+    private final CommonSerializer serializer;
 
     public NettyServer(String host, int port) {
+        this(host, port, DEFAULT_SERIALIZER);
+    }
+
+    public NettyServer(String host, int port, Integer serializer) {
         this.host = host;
         this.port = port;
         serviceRegistry = new NacosServiceRegister();
         serviceProvider = new ServiceProviderImpl();
+        this.serializer = CommonSerializer.getByCode(serializer);
     }
 
     /**
@@ -68,6 +73,7 @@ public class NettyServer implements RpcServer {
 
     @Override
     public void start() {
+        ShutdownHook.getShutdownHook().addClearAllHook();
         if(serializer == null){
             logger.error("未设置序列化器");
             throw new RpcException(RpcError.SERIALIZER_NOT_FOUND);
@@ -92,7 +98,6 @@ public class NettyServer implements RpcServer {
                         }
                     });
             ChannelFuture future = serverBootstrap.bind(host, port).sync();
-            ShutdownHook.getShutdownHook().addClearAllHook();
             future.channel().closeFuture().sync();
         }catch (InterruptedException e){
             logger.error("启动服务器时有错误发生 ",e);
@@ -101,11 +106,4 @@ public class NettyServer implements RpcServer {
             workerGroup.shutdownGracefully();
         }
     }
-
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
-    }
-
-
 }

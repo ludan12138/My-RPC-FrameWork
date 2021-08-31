@@ -1,5 +1,7 @@
 package cn.ludan.rpc.registry;
 
+import cn.ludan.rpc.loadbalancer.LoadBalancer;
+import cn.ludan.rpc.loadbalancer.RandomLoadBalancer;
 import cn.ludan.rpc.util.NacosUtil;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
@@ -14,15 +16,21 @@ public class NacosServiceDiscovery implements ServiceDiscovery{
 
     private static final Logger logger = LoggerFactory.getLogger(NacosServiceDiscovery.class);
 
-    public NacosServiceDiscovery() {
+    private final LoadBalancer loadBalancer;
 
+    public NacosServiceDiscovery() {
+        this(new RandomLoadBalancer());
+    }
+
+    public NacosServiceDiscovery(LoadBalancer loadBalancer){
+        this.loadBalancer = loadBalancer;
     }
 
     @Override
     public InetSocketAddress lookupService(String serviceName) {
         try{
             List<Instance> instances = NacosUtil.getAllInstance(serviceName);
-            Instance instance = instances.get(0);
+            Instance instance = loadBalancer.select(instances);
             return new InetSocketAddress(instance.getIp(),instance.getPort());
         } catch (NacosException e){
             logger.error("获取服务时有错误发生");

@@ -10,18 +10,13 @@ import cn.ludan.rpc.serializer.CommonSerializer;
 
 public interface RpcServer {
 
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
+
     /**
      * 启动服务端
      * @param
      */
     void start();
-
-    /**
-     * 设置序列化器
-     * @param serializer
-     */
-    void setSerializer(CommonSerializer serializer);
-
 
     /**
      * 向Nacos注册服务

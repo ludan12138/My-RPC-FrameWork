@@ -1,5 +1,7 @@
 package cn.ludan.rpc.transport.netty.client;
 
+import cn.ludan.rpc.loadbalancer.LoadBalancer;
+import cn.ludan.rpc.loadbalancer.RandomLoadBalancer;
 import cn.ludan.rpc.registry.NacosServiceDiscovery;
 import cn.ludan.rpc.registry.NacosServiceRegister;
 import cn.ludan.rpc.registry.ServiceDiscovery;
@@ -30,7 +32,7 @@ public class NettyClient implements RpcClient {
 
     private static final Bootstrap bootstrap;
 
-    private CommonSerializer serializer;
+    private final CommonSerializer serializer;
 
     private final ServiceDiscovery serviceDiscovery;
 
@@ -43,7 +45,20 @@ public class NettyClient implements RpcClient {
     }
 
     public NettyClient() {
-        this.serviceDiscovery = new NacosServiceDiscovery();
+        this(DEFAULT_SERIALIZER,new RandomLoadBalancer());
+    }
+
+    public NettyClient(LoadBalancer loadBalancer){
+        this(DEFAULT_SERIALIZER,loadBalancer);
+    }
+
+    public NettyClient(Integer serializer) {
+        this(serializer,new RandomLoadBalancer());
+    }
+
+    public NettyClient(Integer serializer, LoadBalancer loadBalancer){
+        this.serializer = CommonSerializer.getByCode(serializer);
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
     }
 
     @Override
@@ -79,10 +94,5 @@ public class NettyClient implements RpcClient {
             Thread.currentThread().interrupt();
         }
         return result.get();
-    }
-
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
     }
 }

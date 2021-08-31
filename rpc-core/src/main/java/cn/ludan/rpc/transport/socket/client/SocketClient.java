@@ -1,5 +1,7 @@
 package cn.ludan.rpc.transport.socket.client;
 
+import cn.ludan.rpc.loadbalancer.LoadBalancer;
+import cn.ludan.rpc.loadbalancer.RandomLoadBalancer;
 import cn.ludan.rpc.registry.NacosServiceDiscovery;
 import cn.ludan.rpc.registry.NacosServiceRegister;
 import cn.ludan.rpc.registry.ServiceDiscovery;
@@ -31,10 +33,23 @@ public class SocketClient implements RpcClient {
 
     private final ServiceDiscovery serviceDiscovery;
 
-    private CommonSerializer serializer;
+    private final CommonSerializer serializer;
 
     public SocketClient() {
-        this.serviceDiscovery = new NacosServiceDiscovery();
+        this(DEFAULT_SERIALIZER,new RandomLoadBalancer());
+    }
+
+    public SocketClient(LoadBalancer loadBalancer){
+        this(DEFAULT_SERIALIZER,loadBalancer);
+    }
+
+    public SocketClient(Integer serializer) {
+        this(serializer,new RandomLoadBalancer());
+    }
+
+    public SocketClient(Integer serializer, LoadBalancer loadBalancer){
+        this.serializer = CommonSerializer.getByCode(serializer);
+        this.serviceDiscovery = new NacosServiceDiscovery(loadBalancer);
     }
 
     @Override
@@ -57,10 +72,5 @@ public class SocketClient implements RpcClient {
             logger.error("调用时有错误发生");
             throw new RpcException("服务调用失败: ",e);
         }
-    }
-
-    @Override
-    public void setSerializer(CommonSerializer serializer) {
-        this.serializer = serializer;
     }
 }

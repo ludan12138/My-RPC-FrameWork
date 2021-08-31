@@ -10,6 +10,8 @@ import cn.ludan.rpc.serializer.CommonSerializer;
 */
 public interface RpcClient {
 
+    int DEFAULT_SERIALIZER = CommonSerializer.KRYO_SERIALIZER;
+
     /**
      * 客户端发送RPC请求
      * @param rpcRequest
@@ -17,9 +19,4 @@ public interface RpcClient {
      */
     Object sendRequest(RpcRequest rpcRequest);
 
-    /**
-     * 设置序列化器
-     * @param serializer
-     */
-    void setSerializer(CommonSerializer serializer);
 }
